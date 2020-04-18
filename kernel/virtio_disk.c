@@ -279,6 +279,7 @@ virtio_disk_intr(int n)
 
     disk[n].used_idx = (disk[n].used_idx + 1) % NUM;
   }
+  *R(n, VIRTIO_MMIO_INTERRUPT_ACK) = *R(n, VIRTIO_MMIO_INTERRUPT_STATUS) & 0x3;
 
   release(&disk[n].vdisk_lock);
 }
