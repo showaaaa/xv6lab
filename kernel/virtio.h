@@ -65,12 +65,21 @@ struct virtq_used_elem {
   uint32 len;
 };
 
-// for disk ops
-#define VIRTIO_BLK_T_IN  0 // read the disk
-#define VIRTIO_BLK_T_OUT 1 // write the disk
-
 struct virtq_used {
   uint16 flags;
   uint16 idx;
   struct virtq_used_elem ring[];
+};
+
+// for disk ops
+#define VIRTIO_BLK_T_IN  0 // read the disk
+#define VIRTIO_BLK_T_OUT 1 // write the disk
+
+// the format of the first descriptor in a disk request.
+// to be followed by two more descriptors containing
+// the block, and a one-byte status.
+struct virtio_blk_req {
+  uint32 type; // VIRTIO_BLK_T_IN or ..._OUT
+  uint32 reserved;
+  uint64 sector;
 };

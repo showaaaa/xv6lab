@@ -50,6 +50,10 @@ struct disk {
   // initialized?
   int init;
 
+  // disk command headers.
+  // one-for-one with descriptors, for convenience.
+  struct virtio_blk_req ops[NUM];
+  
   struct spinlock vdisk_lock;
 } __attribute__ ((aligned (PGSIZE))) disk[NDISK];
   
@@ -204,23 +208,17 @@ virtio_disk_rw(int n, struct buf *b, int write)
   // format the three descriptors.
   // qemu's virtio-blk.c reads them.
 
-  struct virtio_blk_outhdr {
-    uint32 type;
-    uint32 reserved;
-    uint64 sector;
-  } buf0;
+  struct virtio_blk_req *buf0 = &disk[n].ops[idx[0]];
 
   if(write)
-    buf0.type = VIRTIO_BLK_T_OUT; // write the disk
+    buf0->type = VIRTIO_BLK_T_OUT; // write the disk
   else
-    buf0.type = VIRTIO_BLK_T_IN; // read the disk
-  buf0.reserved = 0;
-  buf0.sector = sector;
+    buf0->type = VIRTIO_BLK_T_IN; // read the disk
+  buf0->reserved = 0;
+  buf0->sector = sector;
 
-  // buf0 is on a kernel stack, which is not direct mapped,
-  // thus the call to kvmpa().
-  disk[n].desc[idx[0]].addr = (uint64) kvmpa((uint64) &buf0);
-  disk[n].desc[idx[0]].len = sizeof(buf0);
+  disk[n].desc[idx[0]].addr = (uint64) buf0;
+  disk[n].desc[idx[0]].len = sizeof(struct virtio_blk_req);
   disk[n].desc[idx[0]].flags = VIRTQ_DESC_F_NEXT;
   disk[n].desc[idx[0]].next = idx[1];
 
