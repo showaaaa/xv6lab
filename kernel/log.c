@@ -223,7 +223,7 @@ log_write(struct buf *b)
 
   acquire(&log[dev].lock);
   for (i = 0; i < log[dev].lh.n; i++) {
-    if (log[dev].lh.block[i] == b->blockno)   // log absorbtion
+    if (log[dev].lh.block[i] == b->blockno)   // log absorption
       break;
   }
   log[dev].lh.block[i] = b->blockno;
