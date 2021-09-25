@@ -284,4 +284,4 @@ tarball: handin-check
 	tar rf lab-$(LAB)-handin.tar conf/LAB
 	gzip -f lab-$(LAB)-handin.tar
 
-.PHONY: qemu qemu-gdb gdb qemu-trace tarball tarball-pref clean grade handin-check
+.PHONY: qemu qemu-gdb gdb qemu-trace tarball clean grade handin-check
