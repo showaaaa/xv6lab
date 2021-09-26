@@ -125,16 +125,16 @@ sys_link(void)
   if(argstr(0, old, MAXPATH) < 0 || argstr(1, new, MAXPATH) < 0)
     return -1;
 
-  begin_op(ROOTDEV);
+  begin_op();
   if((ip = namei(old)) == 0){
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
 
   ilock(ip);
   if(ip->type == T_DIR){
     iunlockput(ip);
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
 
@@ -152,7 +152,7 @@ sys_link(void)
   iunlockput(dp);
   iput(ip);
 
-  end_op(ROOTDEV);
+  end_op();
 
   return 0;
 
@@ -161,7 +161,7 @@ bad:
   ip->nlink--;
   iupdate(ip);
   iunlockput(ip);
-  end_op(ROOTDEV);
+  end_op();
   return -1;
 }
 
@@ -192,9 +192,9 @@ sys_unlink(void)
   if(argstr(0, path, MAXPATH) < 0)
     return -1;
 
-  begin_op(ROOTDEV);
+  begin_op();
   if((dp = nameiparent(path, name)) == 0){
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
 
@@ -228,13 +228,13 @@ sys_unlink(void)
   iupdate(ip);
   iunlockput(ip);
 
-  end_op(ROOTDEV);
+  end_op();
 
   return 0;
 
 bad:
   iunlockput(dp);
-  end_op(ROOTDEV);
+  end_op();
   return -1;
 }
 
@@ -295,30 +295,30 @@ sys_open(void)
   if((n = argstr(0, path, MAXPATH)) < 0 || argint(1, &omode) < 0)
     return -1;
 
-  begin_op(ROOTDEV);
+  begin_op();
 
   if(omode & O_CREATE){
     ip = create(path, T_FILE, 0, 0);
     if(ip == 0){
-      end_op(ROOTDEV);
+      end_op();
       return -1;
     }
   } else {
     if((ip = namei(path)) == 0){
-      end_op(ROOTDEV);
+      end_op();
       return -1;
     }
     ilock(ip);
     if(ip->type == T_DIR && omode != O_RDONLY){
       iunlockput(ip);
-      end_op(ROOTDEV);
+      end_op();
       return -1;
     }
   }
 
   if(ip->type == T_DEVICE && (ip->major < 0 || ip->major >= NDEV)){
     iunlockput(ip);
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
 
@@ -326,7 +326,7 @@ sys_open(void)
     if(f)
       fileclose(f);
     iunlockput(ip);
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
 
@@ -343,7 +343,7 @@ sys_open(void)
   f->writable = (omode & O_WRONLY) || (omode & O_RDWR);
 
   iunlock(ip);
-  end_op(ROOTDEV);
+  end_op();
 
   return fd;
 }
@@ -354,13 +354,13 @@ sys_mkdir(void)
   char path[MAXPATH];
   struct inode *ip;
 
-  begin_op(ROOTDEV);
+  begin_op();
   if(argstr(0, path, MAXPATH) < 0 || (ip = create(path, T_DIR, 0, 0)) == 0){
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
   iunlockput(ip);
-  end_op(ROOTDEV);
+  end_op();
   return 0;
 }
 
@@ -371,16 +371,16 @@ sys_mknod(void)
   char path[MAXPATH];
   int major, minor;
 
-  begin_op(ROOTDEV);
+  begin_op();
   if((argstr(0, path, MAXPATH)) < 0 ||
      argint(1, &major) < 0 ||
      argint(2, &minor) < 0 ||
      (ip = create(path, T_DEVICE, major, minor)) == 0){
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
   iunlockput(ip);
-  end_op(ROOTDEV);
+  end_op();
   return 0;
 }
 
@@ -391,20 +391,20 @@ sys_chdir(void)
   struct inode *ip;
   struct proc *p = myproc();
   
-  begin_op(ROOTDEV);
+  begin_op();
   if(argstr(0, path, MAXPATH) < 0 || (ip = namei(path)) == 0){
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
   ilock(ip);
   if(ip->type != T_DIR){
     iunlockput(ip);
-    end_op(ROOTDEV);
+    end_op();
     return -1;
   }
   iunlock(ip);
   iput(p->cwd);
-  end_op(ROOTDEV);
+  end_op();
   p->cwd = ip;
   return 0;
 }

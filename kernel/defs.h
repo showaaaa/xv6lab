@@ -66,9 +66,8 @@ void            kinit();
 // log.c
 void            initlog(int, struct superblock*);
 void            log_write(struct buf*);
-void            begin_op(int);
-void            end_op(int);
-void            crash_op(int,int);
+void            begin_op(void);
+void            end_op(void);
 
 // pipe.c
 int             pipealloc(struct file**, struct file**);
@@ -177,9 +176,9 @@ int             plic_claim(void);
 void            plic_complete(int);
 
 // virtio_disk.c
-void            virtio_disk_init(int);
-void            virtio_disk_rw(int, struct buf *, int);
-void            virtio_disk_intr(int);
+void            virtio_disk_init(void);
+void            virtio_disk_rw(struct buf *, int);
+void            virtio_disk_intr(void);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))

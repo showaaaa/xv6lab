@@ -334,9 +334,9 @@ exit(int status)
     }
   }
 
-  begin_op(ROOTDEV);
+  begin_op();
   iput(p->cwd);
-  end_op(ROOTDEV);
+  end_op();
   p->cwd = 0;
 
   // we might re-parent a child to init. we can't be precise about
@@ -540,7 +540,7 @@ forkret(void)
     // regular process (e.g., because it calls sleep), and thus cannot
     // be run from main().
     first = 0;
-    fsinit(minor(ROOTDEV));
+    fsinit(ROOTDEV);
   }
 
   usertrapret();

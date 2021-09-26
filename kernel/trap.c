@@ -189,8 +189,8 @@ devintr()
 
     if(irq == UART0_IRQ){
       uartintr();
-    } else if(irq == VIRTIO0_IRQ || irq == VIRTIO1_IRQ ){
-      virtio_disk_intr(irq - VIRTIO0_IRQ);
+    } else if(irq == VIRTIO0_IRQ){
+      virtio_disk_intr();
     } else {
       // the PLIC sends each device interrupt to every core,
       // which generates a lot of interrupts with irq==0.
