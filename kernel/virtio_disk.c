@@ -111,10 +111,6 @@ virtio_disk_init(void)
   if(!(status & VIRTIO_CONFIG_S_FEATURES_OK))
     panic("virtio disk FEATURES_OK unset");
 
-  // Tell device we're completely ready.
-  status |= VIRTIO_CONFIG_S_DRIVER_OK;
-  *R(VIRTIO_MMIO_STATUS) = status;
-
   // Initialize queue 0.
   *R(VIRTIO_MMIO_QUEUE_SEL) = 0;
   if(*R(VIRTIO_MMIO_QUEUE_READY))
@@ -133,11 +129,16 @@ virtio_disk_init(void)
   *R(VIRTIO_MMIO_DEVICE_DESC_LOW)  = (uint64)disk.used;
   *R(VIRTIO_MMIO_DEVICE_DESC_HIGH) = (uint64)disk.used >> 32;
 
+  /* Queue ready. */
   *R(VIRTIO_MMIO_QUEUE_READY) = 0x1;
 
   // all NUM descriptors start out unused.
   for(int i = 0; i < NUM; i++)
     disk.free[i] = 1;
+
+  // Tell device we're completely ready.
+  status |= VIRTIO_CONFIG_S_DRIVER_OK;
+  *R(VIRTIO_MMIO_STATUS) = status;
 
   // plic.c and trap.c arrange for interrupts from VIRTIO0_IRQ.
 }
