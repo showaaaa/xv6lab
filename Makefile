@@ -214,7 +214,7 @@ QEMUOPTS = -machine virt -global virtio-mmio.force-legacy=false
 QEMUOPTS += -bios none -kernel $K/kernel -m 128M -smp $(CPUS) -nographic
 QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0 -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 QEMUOPTS += -no-user-config
-QEMUOPTS += -device virtio-net-device,netdev=en0 -object filter-dump,id=f0,netdev=en0,file=en0.pcap
+QEMUOPTS += -device virtio-net-device,bus=virtio-mmio-bus.1,netdev=en0 -object filter-dump,id=f0,netdev=en0,file=en0.pcap
 # to foward a host port $(PORT80) to port 80 inside QEMU,
 # use "-netdev type=user,id=en0,hostfwd=tcp::$(PORT80)-:80"
 QEMUOPTS += -netdev type=user,id=en0

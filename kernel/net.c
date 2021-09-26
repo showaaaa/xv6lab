@@ -10,7 +10,7 @@
 #include "lwip/netif.h"
 #include "lwip/timeouts.h"
 
-struct netif netif[NNETIF];
+struct netif netif;
 
 err_t
 linkoutput(struct netif *netif, struct pbuf *p)
@@ -70,56 +70,55 @@ linkinit(struct netif *netif)
 }
 
 void
-netadd(int n)
+netadd(void)
 {
-  struct netif *new = &netif[n];
   int i;
   char addr[IPADDR_STRLEN_MAX], netmask[IPADDR_STRLEN_MAX], gw[IPADDR_STRLEN_MAX];
 
-  if(!netif_add_noaddr(new, (void *)(uintptr_t)n, linkinit, netif_input))
+  if(!netif_add_noaddr(&netif, NULL, linkinit, netif_input))
     panic("netadd");
 
-  new->name[0] = 'e';
-  new->name[1] = 'n';
-  netif_set_link_up(new);
-  netif_set_up(new);
+  netif.name[0] = 'e';
+  netif.name[1] = 'n';
+  netif_set_link_up(&netif);
+  netif_set_up(&netif);
 
-  printf("net %d: mac ", n);
+  printf("net: mac ");
   for(i = 0; i < ETH_HWADDR_LEN; ++i){
     if(i)
       printf(":");
-    if(new->hwaddr[i] < 0x10)
+    if(netif.hwaddr[i] < 0x10)
       printf("0");
-    printf("%x", new->hwaddr[i]);
+    printf("%x", netif.hwaddr[i]);
   }
   printf("\n");
 
-  dhcp_start(new);
+  dhcp_start(&netif);
   /* wait until DHCP succeeds */
-  while(!dhcp_supplied_address(new)){
-    linkinput(new);
+  while(!dhcp_supplied_address(&netif)){
+    linkinput(&netif);
     sys_check_timeouts();
   }
 
-  ipaddr_ntoa_r(netif_ip_addr4(new), addr, sizeof(addr));
-  ipaddr_ntoa_r(netif_ip_netmask4(new), netmask, sizeof(netmask));
-  ipaddr_ntoa_r(netif_ip_gw4(new), gw, sizeof(gw));
-  printf("net %d: addr %s netmask %s gw %s\n", n, addr, netmask, gw);
+  ipaddr_ntoa_r(netif_ip_addr4(&netif), addr, sizeof(addr));
+  ipaddr_ntoa_r(netif_ip_netmask4(&netif), netmask, sizeof(netmask));
+  ipaddr_ntoa_r(netif_ip_gw4(&netif), gw, sizeof(gw));
+  printf("net: addr %s netmask %s gw %s\n", addr, netmask, gw);
 }
 
 int
 nettimer(void)
 {
   sys_check_timeouts();
-  return linkinput(&netif[0]);
+  return linkinput(&netif);
 }
 
 void
 netinit(void)
 {
   lwip_init();
-  netadd(0);
-  netif_set_default(&netif[0]);
+  netadd();
+  netif_set_default(&netif);
 }
 
 uint32

@@ -210,6 +210,6 @@ void            netinit(void);
 int             nettimer(void);
 
 // virtio_net.c
-int             virtio_net_init(int, void *);
-int             virtio_net_send(int, const void *data, int len);
-int             virtio_net_recv(int, void *data, int len);
+void            virtio_net_init(void *);
+int             virtio_net_send(const void *data, int len);
+int             virtio_net_recv(void *data, int len);
