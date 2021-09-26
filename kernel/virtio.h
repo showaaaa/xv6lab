@@ -47,6 +47,7 @@
 #define VIRTIO_RING_F_INDIRECT_DESC 28
 #define VIRTIO_RING_F_EVENT_IDX     29
 
+// a single descriptor, from the spec.
 struct virtq_desc {
   uint64 addr;
   uint32 len;
@@ -56,23 +57,29 @@ struct virtq_desc {
 #define VIRTQ_DESC_F_NEXT  1 // chained with another descriptor
 #define VIRTQ_DESC_F_WRITE 2 // device writes (vs read)
 
+// the (entire) avail ring, from the spec.
 struct virtq_avail {
-  uint16 flags;
-  uint16 idx;
-  uint16 ring[];
+  uint16 flags; // always zero
+  uint16 idx;   // driver will write ring[idx] next
+  uint16 ring[]; // descriptor numbers of chain heads
 };
 #define VIRTQ_AVAIL_F_NO_INTERRUPT 1 // suppress interrupts
 
+// one entry in the "used" ring, with which the
+// device tells the driver about completed requests.
 struct virtq_used_elem {
   uint32 id;   // index of start of completed descriptor chain
   uint32 len;
 };
 
 struct virtq_used {
-  uint16 flags;
-  uint16 idx;
+  uint16 flags; // always zero
+  uint16 idx;   // device increments when it adds a ring[] entry
   struct virtq_used_elem ring[];
 };
+
+// these are specific to virtio block devices, e.g. disks,
+// described in Section 5.2 of the spec.
 
 // for disk ops
 #define VIRTIO_BLK_T_IN  0 // read the disk
