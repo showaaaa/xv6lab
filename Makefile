@@ -175,7 +175,6 @@ UPROGS=\
 	$U/_cowtest\
 	$U/_uthread\
 	$U/_call\
-	$U/_testsh\
 	$U/_kalloctest\
 	$U/_bcachetest\
 	$U/_alloctest\
