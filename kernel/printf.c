@@ -123,7 +123,7 @@ printf(char *fmt, ...)
 void
 backtrace(void)
 {
-  register uint64 fp asm("s0");
+  uint64 fp = r_fp();
   uint64 ra, low = PGROUNDDOWN(fp) + 16, high = PGROUNDUP(fp);
 
   while(!(fp & 7) && fp >= low && fp < high){
