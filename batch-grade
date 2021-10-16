@@ -11,7 +11,7 @@ import tempfile
 import time
 
 
-REPO_PATH = '/xv6'
+REPO_PATH = '.'
 DEVNULL = open(os.devnull, 'w')
 
 
@@ -48,10 +48,11 @@ def grade(config, repo, path, single, output):
             possible = config['norm']
         message = '' if score == possible else stdout
         basename = os.path.basename(sub)
-        email = basename[:-len('.tar.gz')].split('_')[0]
-        results.append({'email': email, 'grade': score, 'comment': message})
-        print('  {}: {} points'.format(email, score), file=sys.stderr)
-    results.sort(key=lambda r: r['grade'])
+        studentname = basename[:-len('.tar.gz')].split('_')[0]
+        # lastnamefirstname, no spaces
+        results.append({'studentname': studentname, 'grade': score, 'comment': message})
+        print('  {}: {} points'.format(studentname, score), file=sys.stderr)
+    results.sort(key=lambda r: r['studentname'])
     if output:
         with open(output, 'w') as fout:
             json.dump(results, fout, indent=2, sort_keys=True)
@@ -97,7 +98,7 @@ def grade_one(config, repo, submission):
                 ], stdout=fout)
     # grade submission
     process = subprocess.Popen(
-        ['python', './grade-lab-{}'.format(config['name'])],
+        ['python3', './grade-lab-{}'.format(config['name'])],
         cwd=grading_dir,
         stdout=subprocess.PIPE,
         stderr=DEVNULL
