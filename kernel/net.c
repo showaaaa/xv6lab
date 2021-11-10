@@ -15,11 +15,10 @@ struct netif netif;
 err_t
 linkoutput(struct netif *netif, struct pbuf *p)
 {
-  int n = (uintptr_t)netif->state;
   struct pbuf *q;
 
   for (q = p; q; q = q->next) {
-    if(virtio_net_send(n, q->payload, q->len))
+    if(virtio_net_send(q->payload, q->len))
       return ERR_IF;
   }
 
@@ -29,14 +28,14 @@ linkoutput(struct netif *netif, struct pbuf *p)
 int
 linkinput(struct netif *netif)
 {
-  int n = (uintptr_t)netif->state, len;
+  int len;
   struct pbuf *p;
 
   p = pbuf_alloc(PBUF_RAW, 1514, PBUF_RAM);
   if(!p)
     return 0;
 
-  len = virtio_net_recv(n, p->payload, p->len);
+  len = virtio_net_recv(p->payload, p->len);
 
   if(len > 0){
     /* shrink pbuf to actual size */
@@ -55,10 +54,7 @@ linkinput(struct netif *netif)
 err_t
 linkinit(struct netif *netif)
 {
-  int n = (uintptr_t)netif->state;
-
-  if(virtio_net_init(n, &netif->hwaddr))
-    return ERR_IF;
+  virtio_net_init(&netif->hwaddr);
 
   netif->hwaddr_len = ETH_HWADDR_LEN;
   netif->linkoutput = linkoutput;
