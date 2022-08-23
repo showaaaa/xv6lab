@@ -82,6 +82,6 @@ def test_countsys_sleep():
         'sleep 10',
         'countsys',
     ]))
-    r.match('30', no=["exec .* failed"])
+    r.match('60', no=["exec .* failed"])
 
 run_tests()
