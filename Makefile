@@ -1,6 +1,5 @@
 K=kernel
 U=user
-LWIP=lwip
 
 OBJS = \
   $K/entry.o \
@@ -32,38 +31,6 @@ OBJS = \
   $K/virtio_disk.o \
   $K/buddy.o \
   $K/list.o
-
-# uncomment for lab net
-#OBJS += \
-  $K/net.o \
-  $K/virtio_net.o \
-  $(LWIP)/core/init.o \
-  $(LWIP)/core/def.o \
-  $(LWIP)/core/dns.o \
-  $(LWIP)/core/inet_chksum.o \
-  $(LWIP)/core/ip.o \
-  $(LWIP)/core/mem.o \
-  $(LWIP)/core/memp.o \
-  $(LWIP)/core/netif.o \
-  $(LWIP)/core/pbuf.o \
-  $(LWIP)/core/raw.o \
-  $(LWIP)/core/stats.o \
-  $(LWIP)/core/sys.o \
-  $(LWIP)/core/tcp.o \
-  $(LWIP)/core/tcp_in.o \
-  $(LWIP)/core/tcp_out.o \
-  $(LWIP)/core/timeouts.o \
-  $(LWIP)/core/udp.o \
-  $(LWIP)/core/ipv4/autoip.o \
-  $(LWIP)/core/ipv4/dhcp.o \
-  $(LWIP)/core/ipv4/etharp.o \
-  $(LWIP)/core/ipv4/icmp.o \
-  $(LWIP)/core/ipv4/igmp.o \
-  $(LWIP)/core/ipv4/ip4_frag.o \
-  $(LWIP)/core/ipv4/ip4.o \
-  $(LWIP)/core/ipv4/ip4_addr.o \
-  $(LWIP)/api/err.o \
-  $(LWIP)/netif/ethernet.o \
 
 # riscv64-unknown-elf- or riscv64-linux-gnu-
 # perhaps in /opt/riscv/bin
@@ -104,8 +71,6 @@ endif
 ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]nopie'),)
 CFLAGS += -fno-pie -nopie
 endif
-
-CFLAGS += -I $K/lwip -I $(LWIP)/include
 
 LDFLAGS = -z max-page-size=4096
 
@@ -185,13 +150,10 @@ fs.img: mkfs/mkfs README user/xargstest.sh $(UPROGS)
 	mkfs/mkfs fs.img README user/xargstest.sh $(UPROGS)
 
 -include kernel/*.d user/*.d
--include lwip/api/*.d lwip/core/*.d lwip/core/ipv4/*.d lwip/netif/*.d
 
 clean:
 	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 	*/*.o */*.d */*.asm */*.sym \
-	$(LWIP)/*/*.o $(LWIP)/*/*.d \
-	$(LWIP)/*/*/*.o $(LWIP)/*/*/*.d \
 	$U/initcode $U/initcode.out $K/kernel fs.img \
 	mkfs/mkfs .gdbinit \
         $U/usys.S \
@@ -234,54 +196,8 @@ qemu-gdb: $K/kernel .gdbinit fs.img
 gdb: $K/kernel .gdbinit
 	$(GDB)
 
-##
-##  FOR submitting lab solutions
-##
-
-LAB := $(shell git symbolic-ref --short HEAD 2> /dev/null)
-ifeq ($(LAB),)
-LAB := $(shell cat conf/LAB)
-endif
-
-ifneq ($(V),@)
-GRADEFLAGS += -v
-endif
-
 print-gdbport:
 	@echo $(GDBPORT)
 
-grade:
-	@echo $(MAKE) clean
-	@$(MAKE) clean || \
-	  (echo "'make clean' failed.  HINT: Do you have another running instance of xv6?" && exit 1)
-	./grade-lab-$(LAB) $(GRADEFLAGS)
+.PHONY: qemu qemu-gdb gdb qemu-trace clean
 
-handin-check:
-	@if ! test -d .git; then \
-		echo No .git directory, is this a git repository?; \
-		false; \
-	fi
-	@if test "$$(git symbolic-ref HEAD)" != refs/heads/$(LAB); then \
-		git branch; \
-		read -p "You are not on the $(LAB) branch.  Hand-in the current branch? [y/N] " r; \
-		test "$$r" = y; \
-	fi
-	@if ! git diff-files --quiet || ! git diff-index --quiet --cached HEAD; then \
-		git status -s; \
-		echo; \
-		echo "You have uncomitted changes.  Please commit or stash them."; \
-		false; \
-	fi
-	@if test -n "`git status -s`"; then \
-		git status -s; \
-		read -p "Untracked files will not be handed in.  Continue? [y/N] " r; \
-		test "$$r" = y; \
-	fi
-
-tarball: handin-check
-	echo $(LAB) > conf/LAB
-	git archive --format=tar -o lab-$(LAB)-handin.tar HEAD
-	tar rf lab-$(LAB)-handin.tar conf/LAB
-	gzip -f lab-$(LAB)-handin.tar
-
-.PHONY: qemu qemu-gdb gdb qemu-trace tarball clean grade handin-check
