@@ -199,5 +199,28 @@ gdb: $K/kernel .gdbinit
 print-gdbport:
 	@echo $(GDBPORT)
 
-.PHONY: qemu qemu-gdb gdb qemu-trace clean
+gradescope:
+	@if ! test -d .git; then \
+		echo "ERROR: No .git directory."; \
+		false; \
+	fi
+	@if test "$$(git symbolic-ref HEAD)" == refs/heads/main; then \
+		echo "ERROR: You are on the main branch, not your lab branch."; \
+		false; \
+	fi
+	@if ! git diff-files --quiet || ! git diff-index --quiet --cached HEAD; then \
+		git status -s; \
+		echo; \
+		echo "You have uncommitted changes.  Please commit or stash them."; \
+		false; \
+	fi
+	@if test -n "`git status -s`"; then \
+		git status -s; \
+		echo; \
+		read -p "Untracked files will not be handed in.  Continue? [y/N] " r; \
+		test "$$r" = y; \
+	fi
+	git archive --output=gradescope.zip HEAD $$(git diff --diff-filter=ACMRTUXB --name-only $$(git log --format="%H" -n 1 origin/main) HEAD)
+
+.PHONY: qemu qemu-gdb gdb qemu-trace clean gradescope
 
