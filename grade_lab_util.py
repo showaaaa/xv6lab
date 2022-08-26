@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
-
 import re
+import sys
 from gradelib import *
 
 r = Runner(save("xv6.out"))
 
-@test(10, "sleep, no arguments")
+@test(10, "sleep, no args")
 def test_sleep_no_args():
     r.run_qemu(shell_script([
         'sleep'
@@ -13,7 +12,7 @@ def test_sleep_no_args():
     r.match(no=["exec .* failed", "$ sleep\n$"])
 
 @test(10, "sleep, returns")
-def test_sleep_no_args():
+def test_sleep_echo():
     r.run_qemu(shell_script([
         'sleep',
         'echo OK'
@@ -21,7 +20,7 @@ def test_sleep_no_args():
     r.match('^OK$', no=["exec .* failed", "$ sleep\n$"])
 
 @test(10, "sleep, makes syscall")
-def test_sleep():
+def test_sleep_breakpoint():
     r.run_qemu(shell_script([
         'sleep 10',
         'echo FAIL'
@@ -43,7 +42,7 @@ def test_countsys_simple():
     r.match('43', no=["exec .* failed"])
 
 @test(10, "countsys, twice")
-def test_countsy_twice():
+def test_countsys_twice():
     r.run_qemu(shell_script([
         'countsys',
         'countsys',
@@ -58,4 +57,9 @@ def test_countsys_sleep():
     ]))
     r.match('60', no=["exec .* failed"])
 
-run_tests()
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        run_tests(outputJSON=sys.argv[1])
+    else:
+        run_tests()
+

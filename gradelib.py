@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-import sys, os, re, time, socket, select, subprocess, errno, shutil, random, string
+import sys, os, re, time, socket, select, subprocess, errno, shutil, random, string, json
 from subprocess import check_call, Popen
 from optparse import OptionParser
 
@@ -30,7 +30,7 @@ def test(points, title=None, parent=None):
         if parent:
             title = "  " + title
 
-        def run_test():
+        def run_test(info):
             global TOTAL, POSSIBLE, CURRENT_TEST
 
             # Handle test dependencies
@@ -70,6 +70,15 @@ def test(points, title=None, parent=None):
                 callback(fail)
             CURRENT_TEST = None
 
+            # Logging test info for JSON output
+            # NOTE: This assumes xv6.out is used as the defualt save path
+            info["name"] = title
+            info["status"] = "failed" if fail else "passed"
+            info["score"] = 0.0 if fail else float(points)
+            info["max_score"] = points
+            with open("xv6.out", "r") as file:
+                info["output"] = file.read()
+
             run_test.ok = not fail
             return run_test.ok
 
@@ -93,7 +102,7 @@ def end_part(name):
     show_part.title = ""
     TESTS.append(show_part)
 
-def run_tests():
+def run_tests(outputJSON=None):
     """Set up for testing and run the registered test functions."""
 
     # Handle command line
@@ -111,16 +120,24 @@ def run_tests():
     # Clean the file system if there is one
     reset_fs()
 
+    # Keeping track of test info for JSON output
+    output = {}
+    output["tests"] = []
+
     # Run tests
-    limit = list(map(str.lower, args))
     try:
         for test in TESTS:
-            if not limit or any(l in test.title.lower() for l in limit):
-                test()
-        if not limit:
+            info = {}
+            test(info)
+            output["tests"].append(info)
             print("Score: %d/%d" % (TOTAL, POSSIBLE))
     except KeyboardInterrupt:
         pass
+
+    if outputJSON:
+        with open(outputJSON, "w") as file:
+            file.write(json.dumps(output))
+
     if TOTAL < POSSIBLE:
         sys.exit(1)
 
