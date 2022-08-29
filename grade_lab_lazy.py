@@ -93,4 +93,8 @@ def test_stacktest():
 def test_usertests_all():
     r.match('^ALL TESTS PASSED$')
 
-run_tests()
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        run_tests(outputJSON=sys.argv[1])
+    else:
+        run_tests()
