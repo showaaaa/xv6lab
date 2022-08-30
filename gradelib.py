@@ -39,7 +39,7 @@ def test(points, title=None, parent=None):
             run_test.complete = True
             parent_failed = False
             if parent:
-                parent_failed = not parent()
+                parent_failed = not parent(info)
 
             # Run the test
             fail = None
