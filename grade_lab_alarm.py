@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import re
+import sys
 from gradelib import *
 
 r = Runner(save("xv6.out"))
