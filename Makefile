@@ -53,7 +53,7 @@ QEMU = qemu-system-riscv64
 CC = $(TOOLPREFIX)gcc
 AS = $(TOOLPREFIX)gas
 LD = $(TOOLPREFIX)ld
-GDB = $(TOOLPREFIX)gdb
+GDB = gdb-multiarch
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
 
