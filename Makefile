@@ -220,7 +220,7 @@ gradescope:
 		read -p "Untracked files will not be handed in.  Continue? [y/N] " r; \
 		test "$$r" = y; \
 	fi
-	git archive --output=submission.zip HEAD $$(git diff --diff-filter=ACMRTUXB --name-only $$(git log --format="%H" -n 1 origin/main) HEAD)
+	git archive --output=submission.zip HEAD $$(git diff -w --diff-filter=ACMRTUXB --name-only $$(git log --format="%H" -n 1 origin/main) HEAD)
 
 .PHONY: qemu qemu-gdb gdb qemu-trace clean gradescope
 
