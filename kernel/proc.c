@@ -116,7 +116,7 @@ found:
 
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
-
+  p->trap_va = TRAPFRAME;
   // Set up new context to start executing at forkret,
   // which returns to user space.
   memset(&p->context, 0, sizeof(p->context));
