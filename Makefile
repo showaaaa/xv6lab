@@ -104,12 +104,12 @@ $U/usys.o : $U/usys.S
 $U/_forktest: $U/forktest.o $(ULIB)
 	# forktest has less library code linked in - needs to be small
 	# in order to be able to max out the proc table.
-	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_forktest $U/forktest.o $U/ulib.o $U/usys.o
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_forktest $U/forktest.o $U/ulib.o $U/usys.o $U/umalloc.o
 	$(OBJDUMP) -S $U/_forktest > $U/forktest.asm
 
-$U/_uthread: $U/uthread.o $U/uthread_switch.o $(ULIB)
-	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_uthread $U/uthread.o $U/uthread_switch.o $(ULIB)
-	$(OBJDUMP) -S $U/_uthread > $U/uthread.asm
+# $U/_uthread: $U/uthread.o $U/uthread_switch.o $(ULIB)
+# 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_uthread $U/uthread.o $U/uthread_switch.o $(ULIB)
+# 	$(OBJDUMP) -S $U/_uthread > $U/uthread.asm
 
 mkfs/mkfs: mkfs/mkfs.c $K/fs.h
 	gcc -Werror -Wall -I. -o mkfs/mkfs mkfs/mkfs.c
@@ -138,12 +138,13 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_cowtest\
-	$U/_uthread\
 	$U/_call\
 	$U/_kalloctest\
 	$U/_bcachetest\
 	$U/_alloctest\
 	$U/_specialtest\
+	$U/_umalloc\
+	# $U/_threadtest\
 	# $U/_symlinktest\
 
 fs.img: mkfs/mkfs README user/xargstest.sh $(UPROGS)

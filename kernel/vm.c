@@ -427,3 +427,20 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
     return -1;
   }
 }
+
+uint64
+kwalkaddr(pagetable_t pagetable, uint64 va)
+{
+  pte_t* pte;
+  uint64 pa;
+
+  if(va>= MAXVA)
+    return 0;
+  pte = walk(pagetable, va, 0);
+  if (pte == 0)
+    return 0;
+  if ((*pte & PTE_V) == 0)
+    return 0;
+  pa = PTE2PA(*pte);
+  return pa;
+}

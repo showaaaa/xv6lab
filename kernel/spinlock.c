@@ -8,7 +8,7 @@
 #include "proc.h"
 #include "defs.h"
 
-#define NLOCK 1000
+#define NLOCK 10000
 
 static int nlock;
 static struct spinlock *locks[NLOCK];
