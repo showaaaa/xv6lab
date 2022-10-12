@@ -12,11 +12,11 @@ int res1 = 0;
 int res2 = 0;
 
 #define assert(x) if (x) {} else { \
-   printf("%s: %d ", __FILE__, __LINE__); \
-   printf("assert failed (%s)\n", # x); \
-   printf("TEST FAILED\n"); \
-   kill(ppid); \
-   exit(1); \
+printf("%s: %d ", __FILE__, __LINE__); \
+printf("assert failed (%s)\n", # x); \
+printf("TEST FAILED\n"); \
+kill(ppid); \
+exit(1); \
 }
 
 
@@ -41,9 +41,32 @@ emptytest(void *arg1, void* arg2) {
 }
 
 
+void sbrktest(void* arg1, void* arg2) {
+    char* b = sbrk(65536);
+    // printf("sbrk end\n");
+    for (int i = 0; i < 4096000; i++) {
+        b[i % 65536] = 0;
+    }
+    exit(0);
+} 
+
+void threadinthread(void* arg1, void* arg2) {
+    int int1 = *(int*) arg1;
+    if (int1 == 1234) {
+        // create a new thread
+        int a1 = 0, a2 = 0;
+        int threadid = thread_create(threadinthread, &a1, &a2);
+        assert(threadid > ppid);
+    }
+    for (int i = 0; i < 4096000; i++) {
+        int1++;
+    }
+    while(1);
+    exit(0);
+}
+
 void
 stacktest(void *arg1, void* arg2) {
-    // int i;
     int int1 = *(int*)arg1;
     int int2 = *(int*)arg2;
     assert(int1 == 1);
@@ -55,7 +78,6 @@ stacktest(void *arg1, void* arg2) {
 
 void
 heaptest(void *arg1, void* arg2) {
-  //int i;
     int int1 = *(int*)arg1;
     int int2 = *(int*)arg2;
     assert(int1 == 1);
@@ -66,66 +88,41 @@ heaptest(void *arg1, void* arg2) {
     exit(0);
 }
 
-void sbrktest(void* arg1, void* arg2) {
-    char* b = sbrk(65536);
-    printf("sbrk end\n");
-    for (int i = 0; i < 4096000; i++) {
-        b[i % 65536] = 0;
-    }
-    exit(0);
-}
-
+//test1: thread create function
 int test1(){
-    
+    uint64 arg1 = 1;
+    uint64 arg2 = 2;
 
-   uint64 arg1 = 1;
-   uint64 arg2 = 2;
+    int thread_pid1 = thread_create(emptytest, &arg1, &arg2);
 
-   int thread_pid1 = thread_create(emptytest, &arg1, &arg2);
-//    printf("Created thread 1. PID : %d\n\n", thread_pid1);
+    int thread_pid2 = thread_create(emptytest, &arg1, &arg2);
 
-   int thread_pid2 = thread_create(emptytest, &arg1, &arg2);
-//    printf("Created thread 4. PID : %d\n\n", thread_pid2);
+    assert(thread_pid1 > ppid);
+    assert(thread_pid2 > ppid);
 
-   assert(thread_pid1 > ppid);
-   assert(thread_pid2 > ppid);
-
-   printf("TEST1 PASSED\n");
-   return 0;
+    printf("TEST1 PASSED\n");
+    return 0;
 }
 
+//test2: thread join function
 int test2(){
-
-//    uint64 arg1 = 1;
-//    uint64 arg2 = 2;
-
-//    int thread_pid1 = thread_create(emptytest, &arg1, &arg2);
-// //    printf("Created thread 1. PID : %d\n\n", thread_pid1);
-
-//    int thread_pid2 = thread_create(emptytest, &arg1, &arg2);
-// //    printf("Created thread 4. PID : %d\n\n", thread_pid2);
-
-//    assert(thread_pid1 > 0);
-//    assert(thread_pid2 > 0);
-
-   int join_pid = thread_join();
-   assert(join_pid > 0);
-   join_pid = thread_join();
-   assert(join_pid > 0);
-   printf("TEST2 PASSED\n");
-   return 0;
+    int join_pid = thread_join();
+    assert(join_pid > 0);
+    join_pid = thread_join();
+    assert(join_pid > 0);
+    printf("TEST2 PASSED\n");
+    return 0;
 }
 
+//test3: shared address space
 int test3(){
 
     uint64 arg1 = 1;
     uint64 arg2 = 2;
 
     int thread_pid1 = thread_create(stacktest, &arg1, &arg2);
-//    printf("Created thread 1. PID : %d\n\n", thread_pid1);
 
     int thread_pid2 = thread_create(heaptest, &arg1, &arg2);
-//    printf("Created thread 4. PID : %d\n\n", thread_pid2);
 
     assert(thread_pid1 > 0);
     assert(thread_pid2 > 0);
@@ -143,6 +140,7 @@ int test3(){
     return 0;
 }
 
+//test4: wait/exit 
 int test4(){
     
 
@@ -153,10 +151,8 @@ int test4(){
         uint64 arg2 = 2;
 
         int thread_pid1 = thread_create(exittest, &arg1, &arg2);
-        //    printf("Created thread 1. PID : %d\n\n", thread_pid1);
 
         int thread_pid2 = thread_create(exittest, &arg1, &arg2);
-        //    printf("Created thread 4. PID : %d\n\n", thread_pid2);
 
         assert(thread_pid1 > 0);
         assert(thread_pid2 > 0);
@@ -183,6 +179,7 @@ int test4(){
     
 }
 
+//test5: shared size
 int test5() {
     int thread_pid1 = thread_create(sbrktest, 0, 0);
     int thread_pid2 = thread_create(sbrktest, 0, 0);
@@ -191,6 +188,22 @@ int test5() {
     thread_join();
     thread_join();
     printf("TEST5 PASSED\n");
+    exit(0);
+}
+
+//test6: thread in thread
+int test6() {
+    int pid = fork();
+    if (pid == 0) {
+        int arg1 = 1234;
+        int thread_pid1 = thread_create(threadinthread, &arg1, 0);
+        sleep(20);
+        assert(thread_pid1 > ppid);
+        exit(0);
+    } else {
+        wait(0);
+        printf("TEST6 PASSED\n");
+    }
     exit(0);
 }
 
@@ -203,6 +216,7 @@ main(int argc, char *argv[])
     test3();
     test4();
     test5();
+    test6();
     exit(0);
 }
 
