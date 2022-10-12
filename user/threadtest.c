@@ -188,7 +188,7 @@ int test5() {
     thread_join();
     thread_join();
     printf("TEST5 PASSED\n");
-    exit(0);
+    return 0;
 }
 
 //test6: thread in thread
@@ -204,7 +204,7 @@ int test6() {
         wait(0);
         printf("TEST6 PASSED\n");
     }
-    exit(0);
+    return 0;
 }
 
 int
