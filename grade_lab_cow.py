@@ -10,7 +10,7 @@ r = Runner(save("xv6.out"))
 def test_cowtest():
     r.run_qemu(shell_script([
         'cowtest'
-    ]))
+    ]),timeout=300)
 
 @test(30, "simple", parent=test_cowtest)
 def test_simple():
