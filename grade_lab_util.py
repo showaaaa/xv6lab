@@ -4,14 +4,14 @@ from gradelib import *
 
 r = Runner(save("xv6.out"))
 
-@test(10, "sleep, no args")
+@test(20, "sleep, no args")
 def test_sleep_no_args():
     r.run_qemu(shell_script([
         'sleep'
     ]))
     r.match(no=["exec .* failed", "$ sleep\n$"])
 
-@test(10, "sleep, returns")
+@test(20, "sleep, returns")
 def test_sleep_echo():
     r.run_qemu(shell_script([
         'sleep',
@@ -27,21 +27,14 @@ def test_sleep_breakpoint():
     ]), stop_breakpoint('sys_sleep'))
     r.match('\\$ sleep 10', no=['FAIL'])
 
-@test(40, "pingpong")
-def test_pingpong():
-    r.run_qemu(shell_script([
-        'pingpong', 'echo OK'
-    ]))
-    r.match('^\\d+: received ping$', '^\\d+: received pong$', '^OK$')
-
-@test(10, "countsys, simple")
+@test(20, "countsys, simple")
 def test_countsys_simple():
     r.run_qemu(shell_script([
         'countsys',
     ]))
     r.match('4[12345]', no=["exec .* failed"])
 
-@test(10, "countsys, twice")
+@test(20, "countsys, twice")
 def test_countsys_twice():
     r.run_qemu(shell_script([
         'countsys',
