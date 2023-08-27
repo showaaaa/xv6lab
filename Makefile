@@ -205,7 +205,7 @@ gradescope:
 		echo "ERROR: No .git directory."; \
 		false; \
 	fi
-	@if test "$$(git symbolic-ref HEAD)" == refs/heads/main; then \
+	@if test "$$(git symbolic-ref HEAD)" = "refs/heads/main"; then \
 		echo "ERROR: You are on the main branch, not your lab branch."; \
 		false; \
 	fi
