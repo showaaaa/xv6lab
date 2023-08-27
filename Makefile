@@ -209,7 +209,7 @@ gradescope:
 		echo "ERROR: You are on the main branch, not your lab branch."; \
 		false; \
 	fi
-	@if ! git diff-files --quiet || ! git diff-index --quiet --cached HEAD; then \
+	@if ! git diff-files --quiet || ! git diff-index --quiet HEAD; then \
 		git status -s; \
 		echo; \
 		echo "You have uncommitted changes.  Please commit or stash them."; \
@@ -222,6 +222,9 @@ gradescope:
 		test "$$r" = y; \
 	fi
 	git archive --output=submission.zip HEAD $$(git diff -w --diff-filter=ACMRTUXB --name-only $$(git log --format="%H" -n 1 origin/main) HEAD)
+
+gradescope-all:
+	zip submission.zip Makefile user/usys.pl user/*.c user/*.h kernel/*.h kernel/*.c
 
 .PHONY: qemu qemu-gdb gdb qemu-trace clean gradescope
 
