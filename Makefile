@@ -215,9 +215,11 @@ gradescope:
 		read -p "You have uncommitted or untracked files.  Continue? [y/N] " r; \
 		test "$$r" = y; \
 	fi
+	rm -f submission.zip
 	git archive --output=submission.zip HEAD $$(git diff -w --diff-filter=ACMRTUXB --name-only $$(git log --format="%H" -n 1 origin/main) HEAD)
 
 gradescope-all:
+	rm -f submission.zip
 	zip submission.zip Makefile user/usys.pl user/*.c user/*.h kernel/*.h kernel/*.c
 
 .PHONY: qemu qemu-gdb gdb qemu-trace clean gradescope
