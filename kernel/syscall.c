@@ -106,6 +106,7 @@ extern uint64 sys_write(void);
 extern uint64 sys_uptime(void);
 extern uint64 sys_ntas(void);
 extern uint64 sys_nfree(void);
+extern uint64 sys_countsys(void);
 
 static uint64 (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -131,7 +132,10 @@ static uint64 (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_ntas]    sys_ntas,
 [SYS_nfree]   sys_nfree,
+[SYS_countsys]   sys_countsys,
 };
+
+int sys_count = 0;
 
 void
 syscall(void)
@@ -139,6 +143,8 @@ syscall(void)
   int num;
   struct proc *p = myproc();
 
+  sys_count++;
+  
   num = p->trapframe->a7;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     p->trapframe->a0 = syscalls[num]();

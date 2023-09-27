@@ -144,6 +144,8 @@ UPROGS=\
 	$U/_alloctest\
 	$U/_specialtest\
 	$U/_umalloc\
+	$U/_sleep\
+	$U/_countsys\
 	# $U/_threadtest\
 	# $U/_symlinktest\
 

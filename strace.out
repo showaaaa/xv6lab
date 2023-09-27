@@ -1,0 +1,307 @@
+execve("/usr/bin/sh", ["sh", "-c", "cat LICENSE | head -c 16"], 0x7ffd465b88d8 /* 35 vars */) = 0
+brk(NULL)                               = 0x5616cedfe000
+arch_prctl(0x3001 /* ARCH_??? */, 0x7ffe44ba3af0) = -1 EINVAL (Invalid argument)
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fe2ec8f3000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=22123, ...}, AT_EMPTY_PATH) = 0
+mmap(NULL, 22123, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fe2ec8ed000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P\237\2\0\0\0\0\0"..., 832) = 832
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+pread64(3, "\4\0\0\0 \0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0"..., 48, 848) = 48
+pread64(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\"\233}\305\t\5?\344\337^)\350b\231\21\360"..., 68, 896) = 68
+newfstatat(3, "", {st_mode=S_IFREG|0755, st_size=2216304, ...}, AT_EMPTY_PATH) = 0
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+mmap(NULL, 2260560, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fe2ec6c5000
+mmap(0x7fe2ec6ed000, 1658880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7fe2ec6ed000
+mmap(0x7fe2ec882000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1bd000) = 0x7fe2ec882000
+mmap(0x7fe2ec8da000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x214000) = 0x7fe2ec8da000
+mmap(0x7fe2ec8e0000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fe2ec8e0000
+close(3)                                = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fe2ec6c2000
+arch_prctl(ARCH_SET_FS, 0x7fe2ec6c2740) = 0
+set_tid_address(0x7fe2ec6c2a10)         = 10896
+set_robust_list(0x7fe2ec6c2a20, 24)     = 0
+rseq(0x7fe2ec6c30e0, 0x20, 0, 0x53053053) = 0
+mprotect(0x7fe2ec8da000, 16384, PROT_READ) = 0
+mprotect(0x5616cdbd6000, 8192, PROT_READ) = 0
+mprotect(0x7fe2ec92d000, 8192, PROT_READ) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+munmap(0x7fe2ec8ed000, 22123)           = 0
+getuid()                                = 1399977
+getgid()                                = 1002
+getpid()                                = 10896
+rt_sigaction(SIGCHLD, {sa_handler=0x5616cdbccaa0, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7fe2ec707520}, NULL, 8) = 0
+geteuid()                               = 1399977
+getrandom("\x8a\xcf\xfc\x25\xa3\xa4\x08\xc4", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x5616cedfe000
+brk(0x5616cee1f000)                     = 0x5616cee1f000
+getppid()                               = 10893
+newfstatat(AT_FDCWD, "/home/xw202/xv6", {st_mode=S_IFDIR|0775, st_size=4096, ...}, 0) = 0
+newfstatat(AT_FDCWD, ".", {st_mode=S_IFDIR|0775, st_size=4096, ...}, 0) = 0
+geteuid()                               = 1399977
+getegid()                               = 1002
+rt_sigaction(SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGINT, {sa_handler=0x5616cdbccaa0, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7fe2ec707520}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7fe2ec707520}, NULL, 8) = 0
+rt_sigaction(SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTERM, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7fe2ec707520}, NULL, 8) = 0
+newfstatat(AT_FDCWD, "/home/xw202/.vscode-server/bin/d045a5eda657f4d7b676dedbfa7aab8207f8a075/bin/remote-cli/cat", 0x7ffe44ba3940, 0) = -1 ENOENT (No such file or directory)
+newfstatat(AT_FDCWD, "/usr/local/sbin/cat", 0x7ffe44ba3940, 0) = -1 ENOENT (No such file or directory)
+newfstatat(AT_FDCWD, "/usr/local/bin/cat", 0x7ffe44ba3940, 0) = -1 ENOENT (No such file or directory)
+newfstatat(AT_FDCWD, "/usr/sbin/cat", 0x7ffe44ba3940, 0) = -1 ENOENT (No such file or directory)
+newfstatat(AT_FDCWD, "/usr/bin/cat", {st_mode=S_IFREG|0755, st_size=35280, ...}, 0) = 0
+pipe2([3, 4], 0)                        = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLDstrace: Process 10897 attached
+, child_tidptr=0x7fe2ec6c2a10) = 10897
+[pid 10896] close(4 <unfinished ...>
+[pid 10897] set_robust_list(0x7fe2ec6c2a20, 24 <unfinished ...>
+[pid 10896] <... close resumed>)        = 0
+[pid 10897] <... set_robust_list resumed>) = 0
+[pid 10896] newfstatat(AT_FDCWD, "/home/xw202/.vscode-server/bin/d045a5eda657f4d7b676dedbfa7aab8207f8a075/bin/remote-cli/head", 0x7ffe44ba3940, 0) = -1 ENOENT (No such file or directory)
+[pid 10896] newfstatat(AT_FDCWD, "/usr/local/sbin/head",  <unfinished ...>
+[pid 10897] close(3 <unfinished ...>
+[pid 10896] <... newfstatat resumed>0x7ffe44ba3940, 0) = -1 ENOENT (No such file or directory)
+[pid 10897] <... close resumed>)        = 0
+[pid 10896] newfstatat(AT_FDCWD, "/usr/local/bin/head",  <unfinished ...>
+[pid 10897] dup2(4, 1 <unfinished ...>
+[pid 10896] <... newfstatat resumed>0x7ffe44ba3940, 0) = -1 ENOENT (No such file or directory)
+[pid 10897] <... dup2 resumed>)         = 1
+[pid 10896] newfstatat(AT_FDCWD, "/usr/sbin/head",  <unfinished ...>
+[pid 10897] close(4 <unfinished ...>
+[pid 10896] <... newfstatat resumed>0x7ffe44ba3940, 0) = -1 ENOENT (No such file or directory)
+[pid 10897] <... close resumed>)        = 0
+[pid 10896] newfstatat(AT_FDCWD, "/usr/bin/head", {st_mode=S_IFREG|0755, st_size=43520, ...}, 0) = 0
+[pid 10897] execve("/usr/bin/cat", ["cat", "LICENSE"], 0x5616cedfeb38 /* 35 vars */ <unfinished ...>
+[pid 10896] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLDstrace: Process 10898 attached
+, child_tidptr=0x7fe2ec6c2a10) = 10898
+[pid 10896] close(3 <unfinished ...>
+[pid 10898] set_robust_list(0x7fe2ec6c2a20, 24 <unfinished ...>
+[pid 10896] <... close resumed>)        = 0
+[pid 10898] <... set_robust_list resumed>) = 0
+[pid 10896] close(-1)                   = -1 EBADF (Bad file descriptor)
+[pid 10896] wait4(-1,  <unfinished ...>
+[pid 10898] dup2(3, 0)                  = 0
+[pid 10898] close(3)                    = 0
+[pid 10898] execve("/usr/bin/head", ["head", "-c", "16"], 0x5616cedfeb68 /* 35 vars */ <unfinished ...>
+[pid 10897] <... execve resumed>)       = 0
+[pid 10897] brk(NULL)                   = 0x561995242000
+[pid 10897] arch_prctl(0x3001 /* ARCH_??? */, 0x7ffc22ce0990) = -1 EINVAL (Invalid argument)
+[pid 10897] mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f8ad3bc7000
+[pid 10897] access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+[pid 10897] openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+[pid 10897] newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=22123, ...}, AT_EMPTY_PATH) = 0
+[pid 10897] mmap(NULL, 22123, PROT_READ, MAP_PRIVATE, 3, 0 <unfinished ...>
+[pid 10898] <... execve resumed>)       = 0
+[pid 10898] brk(NULL)                   = 0x563516909000
+[pid 10898] arch_prctl(0x3001 /* ARCH_??? */, 0x7ffca83be860) = -1 EINVAL (Invalid argument)
+[pid 10898] mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fee3c753000
+[pid 10897] <... mmap resumed>)         = 0x7f8ad3bc1000
+[pid 10898] access("/etc/ld.so.preload", R_OK <unfinished ...>
+[pid 10897] close(3 <unfinished ...>
+[pid 10898] <... access resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10897] <... close resumed>)        = 0
+[pid 10898] openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC <unfinished ...>
+[pid 10897] openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC <unfinished ...>
+[pid 10898] <... openat resumed>)       = 3
+[pid 10897] <... openat resumed>)       = 3
+[pid 10898] newfstatat(3, "",  <unfinished ...>
+[pid 10897] read(3,  <unfinished ...>
+[pid 10898] <... newfstatat resumed>{st_mode=S_IFREG|0644, st_size=22123, ...}, AT_EMPTY_PATH) = 0
+[pid 10897] <... read resumed>"\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P\237\2\0\0\0\0\0"..., 832) = 832
+[pid 10898] mmap(NULL, 22123, PROT_READ, MAP_PRIVATE, 3, 0 <unfinished ...>
+[pid 10897] pread64(3,  <unfinished ...>
+[pid 10898] <... mmap resumed>)         = 0x7fee3c74d000
+[pid 10897] <... pread64 resumed>"\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+[pid 10898] close(3 <unfinished ...>
+[pid 10897] pread64(3,  <unfinished ...>
+[pid 10898] <... close resumed>)        = 0
+[pid 10897] <... pread64 resumed>"\4\0\0\0 \0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0"..., 48, 848) = 48
+[pid 10898] openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC <unfinished ...>
+[pid 10897] pread64(3,  <unfinished ...>
+[pid 10898] <... openat resumed>)       = 3
+[pid 10897] <... pread64 resumed>"\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\"\233}\305\t\5?\344\337^)\350b\231\21\360"..., 68, 896) = 68
+[pid 10898] read(3,  <unfinished ...>
+[pid 10897] newfstatat(3, "",  <unfinished ...>
+[pid 10898] <... read resumed>"\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P\237\2\0\0\0\0\0"..., 832) = 832
+[pid 10897] <... newfstatat resumed>{st_mode=S_IFREG|0755, st_size=2216304, ...}, AT_EMPTY_PATH) = 0
+[pid 10898] pread64(3,  <unfinished ...>
+[pid 10897] pread64(3,  <unfinished ...>
+[pid 10898] <... pread64 resumed>"\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+[pid 10897] <... pread64 resumed>"\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+[pid 10898] pread64(3,  <unfinished ...>
+[pid 10897] mmap(NULL, 2260560, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0 <unfinished ...>
+[pid 10898] <... pread64 resumed>"\4\0\0\0 \0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0"..., 48, 848) = 48
+[pid 10897] <... mmap resumed>)         = 0x7f8ad3999000
+[pid 10898] pread64(3,  <unfinished ...>
+[pid 10897] mmap(0x7f8ad39c1000, 1658880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000 <unfinished ...>
+[pid 10898] <... pread64 resumed>"\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\"\233}\305\t\5?\344\337^)\350b\231\21\360"..., 68, 896) = 68
+[pid 10897] <... mmap resumed>)         = 0x7f8ad39c1000
+[pid 10898] newfstatat(3, "",  <unfinished ...>
+[pid 10897] mmap(0x7f8ad3b56000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1bd000 <unfinished ...>
+[pid 10898] <... newfstatat resumed>{st_mode=S_IFREG|0755, st_size=2216304, ...}, AT_EMPTY_PATH) = 0
+[pid 10897] <... mmap resumed>)         = 0x7f8ad3b56000
+[pid 10898] pread64(3,  <unfinished ...>
+[pid 10897] mmap(0x7f8ad3bae000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x214000 <unfinished ...>
+[pid 10898] <... pread64 resumed>"\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 64) = 784
+[pid 10897] <... mmap resumed>)         = 0x7f8ad3bae000
+[pid 10898] mmap(NULL, 2260560, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0 <unfinished ...>
+[pid 10897] mmap(0x7f8ad3bb4000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0 <unfinished ...>
+[pid 10898] <... mmap resumed>)         = 0x7fee3c525000
+[pid 10897] <... mmap resumed>)         = 0x7f8ad3bb4000
+[pid 10898] mmap(0x7fee3c54d000, 1658880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7fee3c54d000
+[pid 10897] close(3 <unfinished ...>
+[pid 10898] mmap(0x7fee3c6e2000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1bd000 <unfinished ...>
+[pid 10897] <... close resumed>)        = 0
+[pid 10898] <... mmap resumed>)         = 0x7fee3c6e2000
+[pid 10897] mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0 <unfinished ...>
+[pid 10898] mmap(0x7fee3c73a000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x214000 <unfinished ...>
+[pid 10897] <... mmap resumed>)         = 0x7f8ad3996000
+[pid 10898] <... mmap resumed>)         = 0x7fee3c73a000
+[pid 10897] arch_prctl(ARCH_SET_FS, 0x7f8ad3996740 <unfinished ...>
+[pid 10898] mmap(0x7fee3c740000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0 <unfinished ...>
+[pid 10897] <... arch_prctl resumed>)   = 0
+[pid 10898] <... mmap resumed>)         = 0x7fee3c740000
+[pid 10897] set_tid_address(0x7f8ad3996a10 <unfinished ...>
+[pid 10898] close(3 <unfinished ...>
+[pid 10897] <... set_tid_address resumed>) = 10897
+[pid 10898] <... close resumed>)        = 0
+[pid 10897] set_robust_list(0x7f8ad3996a20, 24 <unfinished ...>
+[pid 10898] mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0 <unfinished ...>
+[pid 10897] <... set_robust_list resumed>) = 0
+[pid 10898] <... mmap resumed>)         = 0x7fee3c522000
+[pid 10897] rseq(0x7f8ad39970e0, 0x20, 0, 0x53053053 <unfinished ...>
+[pid 10898] arch_prctl(ARCH_SET_FS, 0x7fee3c522740 <unfinished ...>
+[pid 10897] <... rseq resumed>)         = 0
+[pid 10898] <... arch_prctl resumed>)   = 0
+[pid 10898] set_tid_address(0x7fee3c522a10) = 10898
+[pid 10897] mprotect(0x7f8ad3bae000, 16384, PROT_READ <unfinished ...>
+[pid 10898] set_robust_list(0x7fee3c522a20, 24 <unfinished ...>
+[pid 10897] <... mprotect resumed>)     = 0
+[pid 10898] <... set_robust_list resumed>) = 0
+[pid 10898] rseq(0x7fee3c5230e0, 0x20, 0, 0x53053053 <unfinished ...>
+[pid 10897] mprotect(0x561994db3000, 4096, PROT_READ <unfinished ...>
+[pid 10898] <... rseq resumed>)         = 0
+[pid 10897] <... mprotect resumed>)     = 0
+[pid 10897] mprotect(0x7f8ad3c01000, 8192, PROT_READ <unfinished ...>
+[pid 10898] mprotect(0x7fee3c73a000, 16384, PROT_READ <unfinished ...>
+[pid 10897] <... mprotect resumed>)     = 0
+[pid 10898] <... mprotect resumed>)     = 0
+[pid 10897] prlimit64(0, RLIMIT_STACK, NULL,  <unfinished ...>
+[pid 10898] mprotect(0x56351592e000, 4096, PROT_READ <unfinished ...>
+[pid 10897] <... prlimit64 resumed>{rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+[pid 10898] <... mprotect resumed>)     = 0
+[pid 10898] mprotect(0x7fee3c78d000, 8192, PROT_READ <unfinished ...>
+[pid 10897] munmap(0x7f8ad3bc1000, 22123 <unfinished ...>
+[pid 10898] <... mprotect resumed>)     = 0
+[pid 10897] <... munmap resumed>)       = 0
+[pid 10898] prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+[pid 10897] getrandom( <unfinished ...>
+[pid 10898] munmap(0x7fee3c74d000, 22123 <unfinished ...>
+[pid 10897] <... getrandom resumed>"\x40\x6e\x59\xeb\x97\xd4\x20\xd0", 8, GRND_NONBLOCK) = 8
+[pid 10898] <... munmap resumed>)       = 0
+[pid 10897] brk(NULL <unfinished ...>
+[pid 10898] getrandom( <unfinished ...>
+[pid 10897] <... brk resumed>)          = 0x561995242000
+[pid 10898] <... getrandom resumed>"\x2b\x67\xbb\xd2\xb4\x97\x87\xe3", 8, GRND_NONBLOCK) = 8
+[pid 10897] brk(0x561995263000 <unfinished ...>
+[pid 10898] brk(NULL <unfinished ...>
+[pid 10897] <... brk resumed>)          = 0x561995263000
+[pid 10898] <... brk resumed>)          = 0x563516909000
+[pid 10897] openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC <unfinished ...>
+[pid 10898] brk(0x56351692a000 <unfinished ...>
+[pid 10897] <... openat resumed>)       = 3
+[pid 10898] <... brk resumed>)          = 0x56351692a000
+[pid 10897] newfstatat(3, "",  <unfinished ...>
+[pid 10898] openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC <unfinished ...>
+[pid 10897] <... newfstatat resumed>{st_mode=S_IFREG|0644, st_size=3048928, ...}, AT_EMPTY_PATH) = 0
+[pid 10898] <... openat resumed>)       = 3
+[pid 10897] mmap(NULL, 3048928, PROT_READ, MAP_PRIVATE, 3, 0 <unfinished ...>
+[pid 10898] newfstatat(3, "",  <unfinished ...>
+[pid 10897] <... mmap resumed>)         = 0x7f8ad36ad000
+[pid 10898] <... newfstatat resumed>{st_mode=S_IFREG|0644, st_size=3048928, ...}, AT_EMPTY_PATH) = 0
+[pid 10897] close(3 <unfinished ...>
+[pid 10898] mmap(NULL, 3048928, PROT_READ, MAP_PRIVATE, 3, 0 <unfinished ...>
+[pid 10897] <... close resumed>)        = 0
+[pid 10898] <... mmap resumed>)         = 0x7fee3c239000
+[pid 10898] close(3 <unfinished ...>
+[pid 10897] newfstatat(1, "",  <unfinished ...>
+[pid 10898] <... close resumed>)        = 0
+[pid 10897] <... newfstatat resumed>{st_mode=S_IFIFO|0600, st_size=0, ...}, AT_EMPTY_PATH) = 0
+[pid 10897] openat(AT_FDCWD, "LICENSE", O_RDONLY <unfinished ...>
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale/locale.alias", O_RDONLY|O_CLOEXEC <unfinished ...>
+[pid 10897] <... openat resumed>)       = 3
+[pid 10897] newfstatat(3, "",  <unfinished ...>
+[pid 10898] <... openat resumed>)       = 3
+[pid 10897] <... newfstatat resumed>{st_mode=S_IFREG|0664, st_size=1174, ...}, AT_EMPTY_PATH) = 0
+[pid 10898] newfstatat(3, "",  <unfinished ...>
+[pid 10897] fadvise64(3, 0, 0, POSIX_FADV_SEQUENTIAL <unfinished ...>
+[pid 10898] <... newfstatat resumed>{st_mode=S_IFREG|0644, st_size=2996, ...}, AT_EMPTY_PATH) = 0
+[pid 10897] <... fadvise64 resumed>)    = 0
+[pid 10898] read(3,  <unfinished ...>
+[pid 10897] mmap(NULL, 139264, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0 <unfinished ...>
+[pid 10898] <... read resumed>"# Locale name alias data base.\n#"..., 4096) = 2996
+[pid 10897] <... mmap resumed>)         = 0x7f8ad368b000
+[pid 10898] read(3,  <unfinished ...>
+[pid 10897] read(3,  <unfinished ...>
+[pid 10898] <... read resumed>"", 4096) = 0
+[pid 10897] <... read resumed>"The xv6 software is:\n\nCopyright "..., 131072) = 1174
+[pid 10898] close(3 <unfinished ...>
+[pid 10897] write(1, "The xv6 software is:\n\nCopyright "..., 1174 <unfinished ...>
+[pid 10898] <... close resumed>)        = 0
+[pid 10897] <... write resumed>)        = 1174
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale/en_US.UTF-8/LC_MESSAGES/coreutils.mo", O_RDONLY <unfinished ...>
+[pid 10897] read(3,  <unfinished ...>
+[pid 10898] <... openat resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10897] <... read resumed>"", 131072) = 0
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale/en_US.utf8/LC_MESSAGES/coreutils.mo", O_RDONLY <unfinished ...>
+[pid 10897] munmap(0x7f8ad368b000, 139264 <unfinished ...>
+[pid 10898] <... openat resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10897] <... munmap resumed>)       = 0
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale/en_US/LC_MESSAGES/coreutils.mo", O_RDONLY <unfinished ...>
+[pid 10897] close(3 <unfinished ...>
+[pid 10898] <... openat resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10897] <... close resumed>)        = 0
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale/en.UTF-8/LC_MESSAGES/coreutils.mo", O_RDONLY <unfinished ...>
+[pid 10897] close(1 <unfinished ...>
+[pid 10898] <... openat resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10897] <... close resumed>)        = 0
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale/en.utf8/LC_MESSAGES/coreutils.mo", O_RDONLY <unfinished ...>
+[pid 10897] close(2 <unfinished ...>
+[pid 10898] <... openat resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10897] <... close resumed>)        = 0
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale/en/LC_MESSAGES/coreutils.mo", O_RDONLY <unfinished ...>
+[pid 10897] exit_group(0 <unfinished ...>
+[pid 10898] <... openat resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10897] <... exit_group resumed>)   = ?
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale-langpack/en_US.UTF-8/LC_MESSAGES/coreutils.mo", O_RDONLY) = -1 ENOENT (No such file or directory)
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale-langpack/en_US.utf8/LC_MESSAGES/coreutils.mo", O_RDONLY <unfinished ...>
+[pid 10897] +++ exited with 0 +++
+[pid 10896] <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 10897
+[pid 10896] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=10897, si_uid=1399977, si_status=0, si_utime=0, si_stime=0} ---
+[pid 10898] <... openat resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10896] rt_sigreturn({mask=[]} <unfinished ...>
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale-langpack/en_US/LC_MESSAGES/coreutils.mo", O_RDONLY <unfinished ...>
+[pid 10896] <... rt_sigreturn resumed>) = 10897
+[pid 10898] <... openat resumed>)       = -1 ENOENT (No such file or directory)
+[pid 10896] wait4(-1,  <unfinished ...>
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale-langpack/en.UTF-8/LC_MESSAGES/coreutils.mo", O_RDONLY) = -1 ENOENT (No such file or directory)
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale-langpack/en.utf8/LC_MESSAGES/coreutils.mo", O_RDONLY) = -1 ENOENT (No such file or directory)
+[pid 10898] openat(AT_FDCWD, "/usr/share/locale-langpack/en/LC_MESSAGES/coreutils.mo", O_RDONLY) = -1 ENOENT (No such file or directory)
+[pid 10898] read(0, "The xv6 software", 16) = 16
+[pid 10898] newfstatat(1, "", {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0x4), ...}, AT_EMPTY_PATH) = 0
+[pid 10898] close(0)                    = 0
+[pid 10898] write(1, "The xv6 software", 16) = 16
+[pid 10898] close(1)                    = 0
+[pid 10898] close(2)                    = 0
+[pid 10898] exit_group(0)               = ?
+[pid 10898] +++ exited with 0 +++
+<... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 10898
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=10898, si_uid=1399977, si_status=0, si_utime=0, si_stime=0} ---
+rt_sigreturn({mask=[]})                 = 10898
+wait4(-1, 0x7ffe44ba389c, WNOHANG, NULL) = -1 ECHILD (No child processes)
+exit_group(0)                           = ?
++++ exited with 0 +++
