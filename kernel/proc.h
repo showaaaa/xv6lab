@@ -104,4 +104,7 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   uint64 trap_va;              // trapframe va for threads
+  int alarm_ticks;             // input alarm interval
+  void *handler;               //pointer to user specified handler function
+  int tickspassed;             // how many ticks have passed since the last call
 };
