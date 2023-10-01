@@ -105,6 +105,22 @@ struct proc {
   char name[16];               // Process name (debugging)
   uint64 trap_va;              // trapframe va for threads
   int alarm_ticks;             // input alarm interval
-  void *handler;               //pointer to user specified handler function
-  int tickspassed;             // how many ticks have passed since the last call
+  //uint64 *handler;               //pointer to user specified handler function
+  uint64 handler;               //address of user specified handler function
+  int tickspassed;             // how many ticks have passed since the last call to process'alarm handler
+  uint64 originalUser;          //address for user resume original code
+  //struct trapframe *trapframe2; // data page for trampoline.S for original register for alarmtest
+  uint64 sp;
+  uint64 ra;
+  uint64 s0;
+  uint64 a0;
+  uint64 a1;
+  uint64 a2;
+  uint64 a3;
+  uint64 a4;
+  uint64 a5;
+  uint64 a6;
+  uint64 a7;
+  int flag;                    //prevent reenter in handler
+
 };

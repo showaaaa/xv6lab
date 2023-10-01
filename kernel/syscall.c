@@ -106,7 +106,7 @@ extern uint64 sys_write(void);
 extern uint64 sys_uptime(void);
 extern uint64 sys_ntas(void);
 extern uint64 sys_nfree(void);
-extern uint64 sys_sigalarm(int ticks, void (*handler)());
+extern uint64 sys_sigalarm(void);
 extern uint64 sys_sigreturn(void);
 
 static uint64 (*syscalls[])(void) = {

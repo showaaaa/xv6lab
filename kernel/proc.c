@@ -122,6 +122,14 @@ found:
   memset(&p->context, 0, sizeof(p->context));
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
+  p->tickspassed = 0;
+  p->alarm_ticks = 0;
+  p->handler = 0;
+  p->flag = 0;
+  // if((p->trapframe2 = (struct trapframe *)kalloc()) == 0){
+  //   release(&p->lock);
+  //   return 0;
+  // }
 
   return p;
 }

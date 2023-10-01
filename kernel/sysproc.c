@@ -99,13 +99,31 @@ sys_uptime(void)
 uint64
 sys_sigalarm(void)
 {
-  myproc()->alarm_ticks = 
+  uint64 uargv;
+  uint64 handlerpointer;
+  if(argaddr(0, &uargv) < 0 || argaddr(1, &handlerpointer) < 0){
+    return -1;
+  }
+  myproc()->alarm_ticks = uargv;
+  myproc()->handler = handlerpointer;
   return 0;
 }
 
 uint64
 sys_sigreturn(void)
 {
-  
+  myproc()->trapframe->epc = myproc()->originalUser;
+  myproc()->trapframe->a0 = myproc()->a0;
+  myproc()->trapframe->a1 = myproc()->a1;
+  myproc()->trapframe->a2 = myproc()->a2;
+  myproc()->trapframe->a3 = myproc()->a3;
+  myproc()->trapframe->a4 = myproc()->a4;
+  myproc()->trapframe->a5 = myproc()->a5;
+  myproc()->trapframe->a6 = myproc()->a6;
+  myproc()->trapframe->a7 = myproc()->a7;
+  myproc()->trapframe->sp = myproc()->sp;
+  myproc()->trapframe->ra = myproc()->ra;
+  myproc()->trapframe->s0 = myproc()->s0;
+  myproc()->flag = 0;
   return 0;
 }
