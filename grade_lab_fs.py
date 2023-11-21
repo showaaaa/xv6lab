@@ -35,6 +35,13 @@ def test_devnull():
     ]))
     r.match('^SUCCESS: test symlinks$', no=["exec .* failed"])
 
+@test(15, "test large files (extra credit)")
+def test_largefiletest():
+    r.run_qemu(shell_script([
+        'largefiletest'
+    ]))
+    r.match('^passed$', no=["exec .* failed"])
+
 @test(20, "usertests")
 def test_usertests():
     r.run_qemu(shell_script([
