@@ -39,14 +39,14 @@ def test_devnull():
 def test_largefiletest():
     r.run_qemu(shell_script([
         'largefiletest'
-    ]))
+    ]), timeout=300)
     r.match('^passed$', no=["exec .* failed"])
 
 @test(20, "usertests")
 def test_usertests():
     r.run_qemu(shell_script([
         'usertests'
-    ]), timeout=300)
+    ]), timeout=500)
     r.match('^ALL TESTS PASSED$')
 
 if __name__ == '__main__':

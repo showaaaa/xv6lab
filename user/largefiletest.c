@@ -1,11 +1,12 @@
-#include "kernel/fcntl.h"
 #include "kernel/types.h"
+#include "kernel/fcntl.h"
+#include "kernel/fs.h"
 #include "kernel/stat.h"
 #include "user/user.h"
 
 #define NUMBLOCKS 1024
 
-char buf[1024] = { 0 };
+char buf[BSIZE] = { 0 };
 
 int
 main(int argc, char *argv[])
