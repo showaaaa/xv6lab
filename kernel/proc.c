@@ -31,7 +31,6 @@ procinit(void)
   initlock(&pid_lock, "nextpid");
   for(p = proc; p < &proc[NPROC]; p++) {
       initlock(&p->lock, "proc");
-
       // Allocate a page for the process's kernel stack.
       // Map it high in memory, followed by an invalid
       // guard page.
@@ -41,6 +40,7 @@ procinit(void)
       uint64 va = KSTACK((int) (p - proc));
       kvmmap(va, (uint64)pa, PGSIZE, PTE_R | PTE_W);
       p->kstack = va;
+      //p->sizelock = NULL;
   }
   kvminithart();
 }
@@ -107,7 +107,7 @@ allocproc(void)
 
 found:
   p->pid = allocpid();
-
+  //p->thread = 0;
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
     release(&p->lock);
@@ -117,6 +117,51 @@ found:
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
   p->trap_va = TRAPFRAME;
+  // Set up new context to start executing at forkret,
+  // which returns to user space.
+  memset(&p->context, 0, sizeof(p->context));
+  p->context.ra = (uint64)forkret;
+  p->context.sp = p->kstack + PGSIZE;
+  
+  initlock(&p->sizelock, "sizelock");
+
+  return p;
+}
+
+// Look in the process table for an UNUSED proc.
+// If found, initialize state required to run in the kernel,
+// and return with p->lock held.
+// If there are no free procs, return 0.
+static struct proc*
+t_allocproc(void)
+{
+  struct proc *p;
+
+  for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if(p->state == UNUSED) {
+      goto found;
+    } else {
+      release(&p->lock);
+    }
+  }
+  return 0;
+
+found:
+  p->pid = allocpid();
+  p->thread = 1;
+  printf("kernal enter t_allocproc with found son's pid:%d\n", p->pid);
+  // Allocate a trapframe page.
+  if((p->trapframe = (struct trapframe *)kalloc()) == 0){
+    release(&p->lock);
+    return 0;
+  }
+
+  // An empty user page table.
+  // p->pagetable = proc_pagetable(p);
+
+
+  //p->trap_va = TRAPFRAME;
   // Set up new context to start executing at forkret,
   // which returns to user space.
   memset(&p->context, 0, sizeof(p->context));
@@ -146,6 +191,49 @@ freeproc(struct proc *p)
   p->killed = 0;
   p->xstate = 0;
   p->state = UNUSED;
+  p->thread = 0;
+  
+}
+
+// free a proc structure for thread and the data hanging from it,
+// including user pages.
+// p->lock must be held.
+static void
+t_freeproc(struct proc *p)
+{
+  if(p->trapframe){
+    
+    kfree((void*)p->trapframe);
+  }
+  uvmunmap(p->pagetable, p->trap_va, PGSIZE, 0);
+  p->trapframe = 0;
+  // if(p->pagetable)
+  //   proc_freepagetable(p->pagetable, p->sz);
+
+  //unmap thread's trapframe
+  //close all open files
+  for(int fd = 0; fd < NOFILE; fd++){
+    if(p->ofile[fd]){
+      struct file *f = p->ofile[fd];
+      fileclose(f);
+      p->ofile[fd] = 0;
+    }
+  }
+  printf("exit -> t_freeproc, successfully clean up a child thread pid:%d\n", p->pid);
+  p->pagetable = 0;
+  p->sz = 0;
+  p->pid = 0;
+  p->parent = 0;
+  p->name[0] = 0;
+  p->chan = 0;
+  p->killed = 0;
+  p->xstate = 0;
+  p->state = UNUSED;
+  p->thread = 0;
+  p->trap_va = 0;
+  p->sizelockptr = 0;
+  p->sa = 0;
+
 }
 
 // Create a page table for a given process,
@@ -228,16 +316,80 @@ growproc(int n)
 {
   uint sz;
   struct proc *p = myproc();
-
+  struct proc *pp;
+  if(p->thread == 0){
+    acquire(&p->sizelock);
+  }else{
+    acquire(p->sizelockptr);
+  }
+  
   sz = p->sz;
   if(n > 0){
     if((sz = uvmalloc(p->pagetable, sz, sz + n)) == 0) {
       return -1;
     }
+    for(pp = proc; pp < &proc[NPROC]; pp++){
+    // this code uses pp->parent without holding pp->lock.
+    // acquiring the lock first could cause a deadlock
+    // if pp or a child of pp were also in exit()
+    // and about to try to lock p.
+    //p is process
+      //acquire(&pp->lock);
+      if(p->thread == 0 && pp->parent == p && pp->thread == 1){
+        
+        //uvmalloc(pp->pagetable, sz - n, sz);
+        pp->sz = sz;
+        //release(&pp->lock);
+        // p is a thread
+        //1. update parent process
+        
+      }else if(p->thread == 1 && pp == p->parent && pp->thread == 0){
+        //uvmalloc(pp->pagetable, sz - n, sz);
+        pp->sz = sz;
+        //2. update sister or brother thread
+      }else if(p->thread == 1 && pp->parent == p->parent && pp->thread == 1){
+        //uvmalloc(pp->pagetable, sz - n, sz);
+        pp->sz = sz;
+      }
+      //release(&pp->lock);
+
+    }
   } else if(n < 0){
     sz = uvmdealloc(p->pagetable, sz, sz + n);
+    for(pp = proc; pp < &proc[NPROC]; pp++){
+    // this code uses pp->parent without holding pp->lock.
+    // acquiring the lock first could cause a deadlock
+    // if pp or a child of pp were also in exit()
+    // and about to try to lock p.
+    //p is process
+      //acquire(&pp->lock);
+      if(p->thread == 0 && pp->parent == p && pp->thread == 1){
+        
+        //uvmdealloc(pp->pagetable, sz - n, sz);
+        pp->sz = sz;
+        //release(&pp->lock);
+        // p is a thread
+        //1. update parent process
+        
+      }else if(p->thread == 1 && pp == p->parent && pp->thread == 0){
+        //uvmdealloc(pp->pagetable, sz - n, sz);
+        pp->sz = sz;
+        //2. update sister or brother thread
+      }else if(p->thread == 1 && pp->parent == p->parent && pp->thread == 1){
+        //uvmdealloc(pp->pagetable, sz - n, sz);
+        pp->sz = sz;
+      }
+      //release(&pp->lock);
+
+    }
   }
   p->sz = sz;
+  if(p->thread == 0){
+    release(&p->sizelock);
+  }else{
+    release(p->sizelockptr);
+  }
+  //release(&p->sizelock);
   return 0;
 }
 
@@ -282,6 +434,7 @@ fork(void)
   pid = np->pid;
 
   np->state = RUNNABLE;
+  
 
   release(&np->lock);
 
@@ -300,7 +453,7 @@ reparent(struct proc *p)
     // acquiring the lock first could cause a deadlock
     // if pp or a child of pp were also in exit()
     // and about to try to lock p.
-    if(pp->parent == p){
+    if(pp->parent == p && pp->thread == 0){
       // pp->parent can't change between the check and the acquire()
       // because only the parent changes it, and we're the parent.
       acquire(&pp->lock);
@@ -321,7 +474,7 @@ void
 exit(int status)
 {
   struct proc *p = myproc();
-
+  struct proc *pp;
   if(p == initproc)
     panic("init exiting");
 
@@ -339,14 +492,41 @@ exit(int status)
   end_op();
   p->cwd = 0;
 
+  // main thread of process
+  // Clean up child thread states ( fd, cwd, pagetable, etc)
+  // Transfer its child process to its parent process
+  // Wake up its parent process
+  // Set state to ZOMBIE
+  if(p->thread == 0){
+    for(pp = proc; pp < &proc[NPROC]; pp++){
+    // this code uses pp->parent without holding pp->lock.
+    // acquiring the lock first could cause a deadlock
+    // if pp or a child of pp were also in exit()
+    // and about to try to lock p.
+    if(pp->parent == p && pp->thread == 1){
+      // pp->parent can't change between the check and the acquire()
+      // because only the parent changes it, and we're the parent.
+      
+      acquire(&pp->lock);
+      //pp->state = ZOMBIE;
+      t_freeproc(pp);
+      release(&pp->lock);
+    }
+  }
+  }
+  printf("exit: clean up child thread finished\n");
+  
   // we might re-parent a child to init. we can't be precise about
   // waking up init, since we can't acquire its lock once we've
   // acquired any other proc lock. so wake up init whether that's
   // necessary or not. init may miss this wakeup, but that seems
   // harmless.
-  acquire(&initproc->lock);
-  wakeup1(initproc);
-  release(&initproc->lock);
+  if(p->thread == 0){
+    acquire(&initproc->lock);
+    wakeup1(initproc);
+    release(&initproc->lock);
+  }
+  
 
   // grab a copy of p->parent, to ensure that we unlock the same
   // parent we locked. in case our parent gives us away to init while
@@ -365,7 +545,10 @@ exit(int status)
   acquire(&p->lock);
 
   // Give any children to init.
-  reparent(p);
+  if(p->thread == 0){
+    reparent(p);
+  }
+  
 
   // Parent might be sleeping in wait().
   wakeup1(original_parent);
@@ -400,20 +583,24 @@ wait(uint64 addr)
       // this code uses np->parent without holding np->lock.
       // acquiring the lock first would cause a deadlock,
       // since np might be an ancestor, and we already hold p->lock.
-      if(np->parent == p){
+      if(np->parent == p && np->thread == 0){
         // np->parent can't change between the check and the acquire()
         // because only the parent changes it, and we're the parent.
+        printf("wait kernal: found a child process. PID: %d\n", np->pid);
         acquire(&np->lock);
         havekids = 1;
         if(np->state == ZOMBIE){
           // Found one.
           pid = np->pid;
+          printf("wait kernal: found a child process to clean up. PID: %d\n", np->pid);
+          
           if(addr != 0 && copyout(p->pagetable, addr, (char *)&np->xstate,
                                   sizeof(np->xstate)) < 0) {
             release(&np->lock);
             release(&p->lock);
             return -1;
           }
+          //printf("free a prcocess with name value: %s, pid: %d", np->name, np->pid);
           freeproc(np);
           release(&np->lock);
           release(&p->lock);
@@ -688,5 +875,149 @@ procdump(void)
       state = "???";
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
+  }
+}
+
+int
+clone(void(*fcn)(void*, void*), void *arg1, void *arg2, void *stack)
+{
+  
+  int i, pid;
+  struct proc *np;
+  struct proc *p = myproc();
+  printf("enter clone\n");
+  
+  //printf("alignedStack: %p\n", (uint64)stack);
+  // Allocate process.
+  if((np = t_allocproc()) == 0){
+    return -1;
+  }
+  //update new PCB's pagetable
+  np->pagetable = p->pagetable;
+  // Copy user memory from parent to child.
+  // if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
+  //   freeproc(np);
+  //   release(&np->lock);
+  //   return -1;
+  // }
+  np->sz = p->sz;
+
+  np->sizelockptr = &(p->sizelock);
+
+  //printf("1111111/n");
+  //find a va to map the new created trapframe
+  int find = 0;
+  for(uint64 i = TRAPFRAME; i > p->sz; i -= PGSIZE){
+    if(kwalkaddr(np->pagetable, i) == 0){
+      find = 1;
+      mappages(np->pagetable, i, PGSIZE, (uint64)(np->trapframe), PTE_R | PTE_W);
+      np->trap_va = i;
+      break;
+    }
+  }
+  if(find == 0){
+    //todo need clean up
+    return -1;
+  }
+  
+  //need to modify (done)
+  //Todo done
+  if(p->thread == 1){
+    np->parent = p->parent;
+  }else{
+    np->parent = p;
+  }
+  
+
+  // copy saved user registers.
+  //maybe need update
+  *(np->trapframe) = *(p->trapframe);
+
+  
+  np->trapframe->epc = (uint64)fcn;
+  np->trapframe->a0 = (uint64)arg1;
+  np->trapframe->a1 = (uint64)arg2;
+  //np->trapframe->sp = (uint64)stack + PGSIZE - 1;
+  np->trapframe->sp = PGROUNDDOWN((uint64)stack + 2 * PGSIZE -1);
+  //np->trapframe->sp = PGROUNDUP((uint64)stack);
+  np->sa = (uint64)stack;
+  // Cause fork to return 0 in the child.
+  //np->trapframe->a0 = 0;
+
+  // increment reference counts on open file descriptors.
+  for(i = 0; i < NOFILE; i++)
+    if(p->ofile[i])
+      np->ofile[i] = filedup(p->ofile[i]);
+  np->cwd = idup(p->cwd);
+
+  safestrcpy(np->name, p->name, sizeof(p->name));
+
+  pid = np->pid;
+
+  np->state = RUNNABLE;
+  
+  release(&np->lock);
+
+  return pid;
+}
+
+int
+join(void **stack)
+{
+  
+  struct proc *np;
+  int havekids, pid;
+  struct proc *p = myproc();
+  printf("kernal: enter join\n");
+  // hold p->lock for the whole time to avoid lost
+  // wakeups from a child's exit().
+  acquire(&p->lock);
+
+  for(;;){
+    // Scan through table looking for exited children.
+    havekids = 0;
+    for(np = proc; np < &proc[NPROC]; np++){
+      // this code uses np->parent without holding np->lock.
+      // acquiring the lock first would cause a deadlock,
+      // since np might be an ancestor, and we already hold p->lock.
+      if(np->parent == p && np->thread == 1){
+        // np->parent can't change between the check and the acquire()
+        // because only the parent changes it, and we're the parent.
+        printf("kernal: found a child thread. PID: %d\n", np->pid);
+        acquire(&np->lock);
+        havekids = 1;
+        if(np->state == ZOMBIE){
+          // Found one.
+          printf("kernal: found a child thread to clean up. PID: %d\n", np->pid);
+          pid = np->pid;
+          if((uint64)stack != 0 && copyout(p->pagetable, (uint64)stack, (char *)&np->sa,
+                                  sizeof(np->sa)) < 0) {
+            release(&np->lock);
+            release(&p->lock);
+            return -1;
+          }
+          printf("kernal: start free a thread with pid: %d\n", np->pid);
+          
+          t_freeproc(np);
+          
+          release(&np->lock);
+          release(&p->lock);
+          return pid;
+        }
+        release(&np->lock);
+      }
+    }
+    if(!havekids){
+      printf("kernal: no thread exit, enter sleep\n");
+    }
+    // No point waiting if we don't have any children.
+    if(!havekids || p->killed){
+
+      release(&p->lock);
+      return -1;
+    }
+    
+    // Wait for a child to exit.
+    sleep(p, &p->lock);  //DOC: wait-sleep
   }
 }

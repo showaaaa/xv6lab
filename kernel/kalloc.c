@@ -71,9 +71,11 @@ void *
 kalloc(void)
 {
   struct run *r;
-
+  //printf("kernal: before kem.lock\n");
   acquire(&kmem.lock);
+  //printf("kernal: after kem.lock\n");
   r = kmem.freelist;
+  //printf("kernal: after kem.lock\n");
   if(r){
     kmem.freelist = r->next;
     kmem.nfree--;

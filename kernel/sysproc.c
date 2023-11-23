@@ -95,3 +95,37 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_clone(void)
+{
+  // void(*fcn)(void*, void*);
+  // void *arg1;
+  // void *arg2;
+  // void *stack;
+  uint64 fcn, arg1, arg2, stack;
+  if(argaddr(0, &fcn) < 0){
+    return -1;
+  }
+  if(argaddr(1, &arg1) < 0){
+    return -1;
+  }
+  if(argaddr(2, &arg2) < 0){
+    return -1;
+  }
+  if(argaddr(3, &stack) < 0){
+    return -1;
+  }
+
+  return clone((void (*)(void*, void*))fcn, (void*)arg1, (void*)arg2, (void*)stack);
+}
+
+uint64
+sys_join(void)
+{
+  uint64 stack;
+  if(argaddr(0, &stack) < 0){
+    return -1;
+  }
+  return join((void**)stack);
+}
