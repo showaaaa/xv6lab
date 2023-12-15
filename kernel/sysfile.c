@@ -115,6 +115,8 @@ sys_fstat(void)
   return filestat(f, st);
 }
 
+
+
 // Create the path new as a link to the same inode as old.
 uint64
 sys_link(void)
@@ -321,6 +323,30 @@ sys_open(void)
     end_op();
     return -1;
   }
+  char targetpath[MAXPATH];
+  //struct inode *targetip;
+  if(ip->type == T_SYMLINK){
+    for(int i = 0; i < 10; i++){
+      if(readi(ip, 0, (uint64)targetpath, 0, sizeof(targetpath)) != sizeof(targetpath))
+        panic("open symlink read");
+      iunlockput(ip);
+      if((ip = namei(targetpath)) == 0){
+        end_op();
+        return -1;
+      }
+      ilock(ip);
+      if(ip->type != T_SYMLINK){
+        break;
+      }
+    }
+    if(ip->type == T_SYMLINK){
+      iunlockput(ip);
+      end_op();
+      return -1;
+    }
+    
+    
+  }
 
   if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0){
     if(f)
@@ -484,5 +510,46 @@ sys_pipe(void)
     return -1;
   }
   return 0;
+}
+
+
+uint64
+sys_symlink(void)
+{
+  char new[MAXPATH], old[MAXPATH];
+  struct inode *ip;
+
+  if(argstr(0, old, MAXPATH) < 0 || argstr(1, new, MAXPATH) < 0)
+    return -1;
+  
+  begin_op();
+  
+  
+  
+  ip = create(new, T_SYMLINK, 0, 0);
+  if(ip == 0){
+      end_op();
+      return -1;
+  }
+  
+  if(writei(ip, 0, (uint64)old, 0, sizeof(old)) != sizeof(old))
+    panic("writi");
+
+
+  
+  iunlockput(ip);
+
+  end_op();
+
+  return 0;
+
+// bad:
+//   ilock(ip);
+//   ip->nlink--;
+//   iupdate(ip);
+//   iunlockput(ip);
+//   end_op();
+//   return -1;
+
 }
 

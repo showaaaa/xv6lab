@@ -5,6 +5,10 @@ OBJS = \
   $K/entry.o \
   $K/start.o \
   $K/console.o \
+  $K/null.o \
+  $K/zero.o \
+  $K/uptime.o \
+  $K/random.o \
   $K/printf.o \
   $K/uart.o \
   $K/kalloc.o \
@@ -144,9 +148,10 @@ UPROGS=\
 	$U/_alloctest\
 	$U/_specialtest\
 	$U/_umalloc\
+	$U/_symlinktest\
+	$U/_largefiletest\
 	# $U/_threadtest\
-	# $U/_symlinktest\
-	# $U/_largefiletest\
+	
 
 fs.img: mkfs/mkfs README user/xargstest.sh $(UPROGS)
 	mkfs/mkfs fs.img README user/xargstest.sh $(UPROGS)

@@ -83,6 +83,8 @@ testzero(void)
 
   printf("reading from /dev/zero..\n");
   r = read(fd, buf, sizeof(buf));
+  // printf("size of buffer:%d\n", sizeof(buf));
+  // printf("r value:%d\n", r);
   if (r != 8)
     fail("could not read from /dev/zero");
 
@@ -155,12 +157,17 @@ testrandom(void)
 
 
   printf("reading from /dev/random four times..\n");
+  
   r = read(fd1, buf1, sizeof(buf1));
+  
   if (r != sizeof(buf1)) fail("Failed to read /dev/random");
+  
   r = read(fd1, buf2, sizeof(buf2));
   if (r != sizeof(buf2)) fail("Failed to read /dev/random");
+  
   r = read(fd2, buf3, sizeof(buf3));
   if (r != sizeof(buf3)) fail("Failed to read /dev/random");
+  
   r = read(fd2, buf4, sizeof(buf4));
   if (r != sizeof(buf4)) fail("Failed to read /dev/random");
 

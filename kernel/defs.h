@@ -216,3 +216,15 @@ int             nettimer(void);
 void            virtio_net_init(void *);
 int             virtio_net_send(const void *data, int len);
 int             virtio_net_recv(void *data, int len);
+
+//null.c
+void            nullinit(void);
+
+//zero.c
+void            zeroinit(void);
+
+//uptime.c
+void            uptimeinit(void);
+
+//random.c
+void            randominit(void);

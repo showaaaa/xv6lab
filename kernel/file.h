@@ -27,7 +27,7 @@ struct inode {
   short minor;
   short nlink;
   uint size;
-  uint addrs[NDIRECT+1];
+  uint addrs[NDIRECT+2];
 };
 
 // map major device number to device functions.
@@ -40,3 +40,7 @@ extern struct devsw devsw[];
 
 #define DISK 0
 #define CONSOLE 1
+#define NULL 2
+#define ZERO 3
+#define UPTIME 4
+#define RANDOM 5

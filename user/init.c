@@ -16,9 +16,33 @@ main(void)
     mknod("console", 1, 1);
     open("console", O_RDWR);
   }
+
+  mkdir("/dev");
+  
+  
+  
+
   dup(0);  // stdout
   dup(0);  // stderr
 
+  if(open("/dev/null", O_RDWR) < 0){
+    mknod("/dev/null", 2, 1);
+    open("/dev/null", O_RDWR);
+  }
+ 
+  if(open("/dev/zero", O_RDWR) < 0){
+    mknod("/dev/zero", 3, 1);
+    open("/dev/zero", O_RDWR);
+  }
+
+  if(open("/dev/uptime", O_RDWR) < 0){
+    mknod("/dev/uptime", 4, 1);
+    open("/dev/uptime", O_RDWR);
+  }
+  if(open("/dev/random", O_RDWR) < 0){
+    mknod("/dev/random", 5, 1);
+    open("/dev/random", O_RDWR);
+  }
   for(;;){
     printf("init: starting sh\n");
     pid = fork();
